@@ -105,6 +105,50 @@
       Privacidad: <a href="mailto:privacidad@gestionbyg.com">privacidad@gestionbyg.com</a></p>
     </div>
   </div>
+  <h3 style="color:#fff;margin-top:32px">Escríbanos</h3>
+<form id="form-contacto" class="form-contacto" novalidate>
+  <label>Nombre *<input name="nombre" required maxlength="100" autocomplete="name"></label>
+  <label>Empresa<input name="empresa" maxlength="120" autocomplete="organization"></label>
+  <label>Correo *<input name="correo" type="email" required maxlength="160" autocomplete="email"></label>
+  <label>Teléfono (opcional)<input name="telefono" type="tel" maxlength="30" autocomplete="tel"></label>
+  <label>¿En qué le ayudamos? *<textarea name="mensaje" required maxlength="2000" rows="4"></textarea></label>
+  <input name="sitio_web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+
+  <p class="aviso-mini">Gestión ByG S.A.S. (NIT 902.115.944-4) tratará estos datos solo para responder su solicitud. Usted puede conocer, actualizar, rectificar y suprimir sus datos escribiendo a privacidad@gestionbyg.com.</p>
+
+  <label class="casilla"><input type="checkbox" name="acepta_terminos" required>
+    Acepto los Términos del servicio. <a href="terminos.html" target="_blank" rel="noopener">Leer términos</a></label>
+  <label class="casilla"><input type="checkbox" name="acepta_privacidad" required>
+    Autorizo a Gestión ByG S.A.S. a tratar mis datos para responder mi solicitud, según la Política de privacidad. <a href="privacidad.html" target="_blank" rel="noopener">Leer política</a></label>
+
+  <button class="btn btn-ambar" type="submit">Enviar</button>
+  <p id="form-estado" role="status"></p>
+</form>
+<script>
+document.getElementById("form-contacto").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const f = e.target, estado = document.getElementById("form-estado");
+  if (!f.acepta_terminos.checked || !f.acepta_privacidad.checked) {
+    estado.textContent = "Para enviar, marque las dos casillas."; return;
+  }
+  if (!f.reportValidity()) return;
+  const datos = {
+    nombre: f.nombre.value, empresa: f.empresa.value, correo: f.correo.value,
+    telefono: f.telefono.value, mensaje: f.mensaje.value, sitio_web: f.sitio_web.value,
+    acepta_terminos: f.acepta_terminos.checked, acepta_privacidad: f.acepta_privacidad.checked,
+    pagina: location.pathname
+  };
+  estado.textContent = "Enviando…";
+  try {
+    const r = await fetch("https://gestionbyg-webhook.jburgos.workers.dev/contacto", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos)
+    });
+    const j = await r.json();
+    if (j.ok) { f.reset(); estado.textContent = "Recibido. Radicado " + (j.radicado || "") + ". Le responderemos pronto."; }
+    else estado.textContent = j.error || "No se pudo enviar. Escríbanos a contacto@gestionbyg.com.";
+  } catch (_) { estado.textContent = "No se pudo enviar. Escríbanos a contacto@gestionbyg.com."; }
+});
+</script>
 </div></section>
 </main>
 
