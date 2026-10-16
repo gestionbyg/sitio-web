@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conectar mi WhatsApp | Gestión ByG S.A.S.</title>
+<meta name="description" content="Conecte el número de WhatsApp Business de su empresa al asistente de Gestión ByG S.A.S.">
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header><div class="wrap">
+  <a class="marca" href="index.html"><img class="logo" src="logo.png" alt="Logo de Gestión ByG" width="46" height="46">Gestión ByG</a>
+  <nav><a href="index.html#servicios">Servicios</a><a href="servicio-whatsapp.html">WhatsApp</a><a href="index.html#contacto">Contacto</a><a href="privacidad.html">Privacidad</a><a href="terminos.html">Términos</a></nav>
+</div></header>
+
+<main class="legal">
+<h1 style="color:var(--ciruela)">Conectar mi WhatsApp</h1>
+<p>Conecte el número de WhatsApp Business de su empresa a nuestro asistente mediante el proceso oficial de Meta. Usted conserva el control de su cuenta y puede desconectarla cuando quiera.</p>
+
+<h2>Qué va a pasar</h2>
+<ol>
+<li>Pulse el botón y entre con su cuenta de Facebook (la que administra su empresa).</li>
+<li>Elija o cree su cuenta de WhatsApp Business y verifique su número con el código que Meta le envía.</li>
+<li>Autorice a Gestión ByG a recibir y responder los mensajes de ese número.</li>
+</ol>
+<p>No le pedimos contraseñas: todo ocurre en las pantallas de Meta. Tratamos los datos según nuestra <a href="privacidad.html">política de privacidad</a> y los <a href="terminos.html">términos del servicio</a>.</p>
+
+<p><button id="conectar" class="btn btn-ambar" type="button">Conectar mi WhatsApp</button></p>
+<p id="estado" role="status" aria-live="polite"></p>
+</main>
+
+<script>
+// Identificador de la configuración de Embedded Signup creada en Meta el 15/10/2026 (plantilla con token de 60 días). No es secreto.
+const CONFIG_ID = "979046721911724";
+const APP_ID = "1092477863495618";
+const API = "https://gestionbyg-webhook.jburgos.workers.dev/conectar/finalizar";
+const estado = document.getElementById("estado");
+let sesion = null, codigo = null;
+
+window.fbAsyncInit = function () {
+  FB.init({ appId: APP_ID, autoLogAppEvents: false, xfbml: false, version: "v25.0" });
+};
+
+// Meta avisa por mensaje qué cuenta y qué número eligió el cliente.
+window.addEventListener("message", (e) => {
+  if (e.origin !== "https://www.facebook.com" && e.origin !== "https://web.facebook.com") return;
+  try {
+    const d = JSON.parse(e.data);
+    if (d.type === "WA_EMBEDDED_SIGNUP" && d.event === "FINISH") { sesion = d.data; terminar(); }
+  } catch (_) {}
+});
+
+async function terminar() {
+  if (!sesion || !codigo) return;
+  estado.textContent = "Conectando…";
+  try {
+    const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: codigo, waba_id: sesion.waba_id, phone_number_id: sesion.phone_number_id }) });
+    const j = await r.json();
+    estado.textContent = j.ok ? "Listo. Recibimos su conexión; le avisaremos cuando el asistente esté activo." : (j.error || "No se pudo conectar.");
+  } catch (_) { estado.textContent = "No se pudo conectar. Escríbanos a soporte@gestionbyg.com."; }
+}
+
+document.getElementById("conectar").addEventListener("click", () => {
+  if (CONFIG_ID.startsWith("PENDIENTE")) { estado.textContent = "Este servicio estará disponible pronto."; return; }
+  if (typeof FB === "undefined") { estado.textContent = "No se pudo cargar Facebook. Revise su conexión."; return; }
+  sesion = null; codigo = null;
+  FB.login((resp) => {
+    if (resp.authResponse && resp.authResponse.code) { codigo = resp.authResponse.code; terminar(); }
+    else estado.textContent = "No se completó la conexión.";
+  }, { config_id: CONFIG_ID, response_type: "code", override_default_response_type: true,
+       extras: { setup: {} } });
+});
+</script>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js"></script>
+
+</main>
+
+<footer><div class="wrap">
+  <p>© 2026 Gestión ByG S.A.S. · <a href="index.html">Inicio</a> · <a href="servicio-whatsapp.html">Servicio de WhatsApp</a> · <a href="privacidad.html">Política de privacidad</a> · <a href="terminos.html">Términos del servicio</a> · <a href="eliminacion-datos.html">Eliminación de datos</a> · <a href="reembolso.html">Reembolsos y retracto</a></p>
+</div></footer>
+</body>
+</html>
