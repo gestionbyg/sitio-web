@@ -18,20 +18,33 @@
   <nav><a href="index.html#servicios">Servicios</a><a href="servicio-whatsapp.html">WhatsApp</a><a href="index.html#contacto">Contacto</a><a href="privacidad.html">Privacidad</a><a href="terminos.html">Términos</a></nav>
 </div></header>
 
-<main class="legal">
-<h1 style="color:var(--ciruela)">Conectar mi WhatsApp</h1>
-<p>Conecte el número de WhatsApp Business de su empresa a nuestro asistente mediante el proceso oficial de Meta. Usted conserva el control de su cuenta y puede desconectarla cuando quiera.</p>
-
-<h2>Qué va a pasar</h2>
-<ol>
-<li>Pulse el botón y entre con su cuenta de Facebook (la que administra su empresa).</li>
-<li>Elija o cree su cuenta de WhatsApp Business y verifique su número con el código que Meta le envía.</li>
-<li>Autorice a Gestión ByG a recibir y responder los mensajes de ese número.</li>
-</ol>
-<p>No le pedimos contraseñas: todo ocurre en las pantallas de Meta. Tratamos los datos según nuestra <a href="privacidad.html">política de privacidad</a> y los <a href="terminos.html">términos del servicio</a>.</p>
-
-<p><button id="conectar" class="btn btn-ambar" type="button">Conectar mi WhatsApp</button></p>
-<p id="estado" role="status" aria-live="polite"></p>
+<main>
+<section class="tp tp-pagina" aria-labelledby="cx-titulo">
+  <div class="tp-lado">
+    <img src="logo.png" alt="Logo de Gestión ByG" width="84" height="84">
+    <div class="tp-ico" aria-hidden="true">🔗</div>
+    <p>Todo ocurre en las pantallas oficiales de Meta. Usted conserva el control de su cuenta.</p>
+  </div>
+  <div class="tp-cuerpo">
+    <h2 id="cx-titulo">Conectar mi WhatsApp</h2>
+    <p>Conecte el número de WhatsApp Business de su empresa a nuestro asistente mediante el proceso oficial de Meta. Puede desconectarlo cuando quiera.</p>
+    <ol class="tp-lista">
+      <li>Pulse el botón y entre con su cuenta de Facebook (la que administra su empresa).</li>
+      <li>Elija o cree su cuenta de WhatsApp Business y verifique su número con el código que Meta le envía.</li>
+      <li>Autorice a Gestión ByG a recibir y responder los mensajes de ese número.</li>
+    </ol>
+    <p>No le pedimos contraseñas.</p>
+    <label class="tp-casilla"><input type="checkbox" id="cx-terminos">
+      <span>Acepto los <a href="terminos.html" target="_blank" rel="noopener">Términos del servicio</a>.</span></label>
+    <label class="tp-casilla"><input type="checkbox" id="cx-privacidad">
+      <span>Autorizo a Gestión ByG S.A.S. a tratar los datos de mi cuenta según la <a href="privacidad.html" target="_blank" rel="noopener">Política de privacidad</a> (Ley 1581 de 2012).</span></label>
+    <p id="estado" class="tp-error" role="status" aria-live="polite"></p>
+    <div class="tp-pie">
+      <div class="tp-indicador">PASO 1 DE 3 · EN META</div>
+      <button id="conectar" class="btn btn-ambar" type="button" disabled>Conectar mi WhatsApp</button>
+    </div>
+  </div>
+</section>
 </main>
 
 <script>
@@ -66,7 +79,12 @@ async function terminar() {
   } catch (_) { estado.textContent = "No se pudo conectar. Escríbanos a soporte@gestionbyg.com."; }
 }
 
+const cT = document.getElementById("cx-terminos"), cP = document.getElementById("cx-privacidad"), bC = document.getElementById("conectar");
+function revisarCasillas() { bC.disabled = !(cT.checked && cP.checked); }
+cT.addEventListener("change", revisarCasillas); cP.addEventListener("change", revisarCasillas);
+
 document.getElementById("conectar").addEventListener("click", () => {
+  if (bC.disabled) return;
   if (CONFIG_ID.startsWith("PENDIENTE")) { estado.textContent = "Este servicio estará disponible pronto."; return; }
   if (typeof FB === "undefined") { estado.textContent = "No se pudo cargar Facebook. Revise su conexión."; return; }
   sesion = null; codigo = null;
@@ -78,8 +96,6 @@ document.getElementById("conectar").addEventListener("click", () => {
 });
 </script>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js"></script>
-
-</main>
 
 <footer><div class="wrap">
   <p>© 2026 Gestión ByG S.A.S. · <a href="index.html">Inicio</a> · <a href="servicio-whatsapp.html">Servicio de WhatsApp</a> · <a href="privacidad.html">Política de privacidad</a> · <a href="terminos.html">Términos del servicio</a> · <a href="eliminacion-datos.html">Eliminación de datos</a> · <a href="reembolso.html">Reembolsos y retracto</a></p>

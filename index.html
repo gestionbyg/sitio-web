@@ -36,6 +36,7 @@
     <p>Desarrollamos software a la medida e integramos WhatsApp Business con tus sistemas, para que tu equipo dedique su tiempo a lo que importa.</p>
     <div class="acciones">
       <a class="btn btn-ambar" href="https://wa.me/573202940007?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20sus%20servicios" target="_blank" rel="noopener">Escríbenos por WhatsApp</a>
+      <button class="btn btn-borde" type="button" data-abrir-demo>Pedir demo</button>
       <a class="btn btn-borde" href="#servicios">Ver servicios</a>
     </div>
     <p class="aviso-mini">Empresa colombiana constituida en Bogotá D.C. · NIT 902.115.944-4</p>
@@ -107,48 +108,119 @@
     </div>
   </div>
   <h3 style="color:#fff;margin-top:32px">Escríbanos</h3>
-<form id="form-contacto" class="form-contacto" novalidate>
-  <label>Nombre *<input name="nombre" required maxlength="100" autocomplete="name"></label>
-  <label>Empresa<input name="empresa" maxlength="120" autocomplete="organization"></label>
-  <label>Correo *<input name="correo" type="email" required maxlength="160" autocomplete="email"></label>
-  <label>Teléfono (opcional)<input name="telefono" type="tel" maxlength="30" autocomplete="tel"></label>
-  <label>¿En qué le ayudamos? *<textarea name="mensaje" required maxlength="2000" rows="4"></textarea></label>
-  <input name="sitio_web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+  <p>Cuéntenos en 3 pasos qué necesita y le respondemos.</p>
+  <button class="btn btn-ambar" type="button" data-abrir-demo>Pedir demo</button>
+  <noscript><p>Para escribirnos sin JavaScript use <a href="mailto:contacto@gestionbyg.com">contacto@gestionbyg.com</a>.</p></noscript>
 
-  <p class="aviso-mini">Gestión ByG S.A.S. (NIT 902.115.944-4) tratará estos datos solo para responder su solicitud. Usted puede conocer, actualizar, rectificar y suprimir sus datos escribiendo a privacidad@gestionbyg.com.</p>
-
-  <label class="casilla"><input type="checkbox" name="acepta_terminos" required>
-    Acepto los Términos del servicio. <a href="terminos.html" target="_blank" rel="noopener">Leer términos</a></label>
-  <label class="casilla"><input type="checkbox" name="acepta_privacidad" required>
-    Autorizo a Gestión ByG S.A.S. a tratar mis datos para responder mi solicitud, según la Política de privacidad. <a href="privacidad.html" target="_blank" rel="noopener">Leer política</a></label>
-
-  <button class="btn btn-ambar" type="submit">Enviar</button>
-  <p id="form-estado" role="status"></p>
+<dialog id="demo" class="tarjeta-pasos" aria-labelledby="demo-titulo">
+<form id="form-contacto" class="tp" novalidate method="dialog">
+  <button class="tp-cerrar" type="button" data-cerrar aria-label="Cerrar">&times;</button>
+  <div class="tp-lado">
+    <img src="logo.png" alt="Logo de Gestión ByG" width="84" height="84">
+    <div class="tp-ico" aria-hidden="true">💬</div>
+    <p>Hablemos de lo que puedes automatizar en tu empresa.</p>
+  </div>
+  <div class="tp-cuerpo">
+    <div class="tp-paso activo" data-paso="1">
+      <h2 id="demo-titulo">Pide tu demo</h2>
+      <p>Empecemos por saber quién eres.</p>
+      <div class="tp-campos">
+        <label>Nombre *<input name="nombre" required maxlength="100" autocomplete="name"></label>
+        <label>Empresa<input name="empresa" maxlength="120" autocomplete="organization"></label>
+        <label>Correo *<input name="correo" type="email" required maxlength="160" autocomplete="email"></label>
+        <label>Teléfono (opcional)<input name="telefono" type="tel" maxlength="30" autocomplete="tel"></label>
+      </div>
+    </div>
+    <div class="tp-paso" data-paso="2">
+      <h2>¿En qué te ayudamos?</h2>
+      <p>Cuéntanos tu proceso o lo que quieres mejorar.</p>
+      <div class="tp-campos">
+        <label>Tu necesidad *<textarea name="mensaje" required maxlength="2000" rows="6"></textarea></label>
+      </div>
+    </div>
+    <div class="tp-paso" data-paso="3">
+      <h2>Tus datos, con tu permiso</h2>
+      <p class="aviso-mini" style="color:var(--texto);opacity:.8;margin:0 0 8px">Gestión ByG S.A.S. (NIT 902.115.944-4) tratará estos datos solo para responder su solicitud. Usted puede conocer, actualizar, rectificar y suprimir sus datos escribiendo a privacidad@gestionbyg.com.</p>
+      <label class="tp-casilla"><input type="checkbox" name="acepta_terminos" required>
+        <span>Acepto los Términos del servicio. <a href="terminos.html" target="_blank" rel="noopener">Leer términos</a></span></label>
+      <label class="tp-casilla"><input type="checkbox" name="acepta_privacidad" required>
+        <span>Autorizo a Gestión ByG S.A.S. a tratar mis datos para responder mi solicitud, según la Política de privacidad. <a href="privacidad.html" target="_blank" rel="noopener">Leer política</a></span></label>
+    </div>
+    <div class="tp-paso" data-paso="4">
+      <h2>¡Recibido!</h2>
+      <p class="tp-ok" id="form-ok"></p>
+    </div>
+    <input name="sitio_web" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+    <p class="tp-error" id="form-estado" role="status" aria-live="polite"></p>
+    <div class="tp-pie">
+      <div><div class="tp-indicador" id="tp-ind">PASO 1 DE 3</div><div class="tp-barra" id="tp-barra"><i class="on"></i><i></i><i></i></div></div>
+      <div class="tp-acciones">
+        <button class="tp-atras" type="button" id="tp-atras" hidden>Atrás</button>
+        <button class="btn btn-ambar" type="button" id="tp-sig">Siguiente</button>
+      </div>
+    </div>
+  </div>
 </form>
+</dialog>
 <script>
-document.getElementById("form-contacto").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const f = e.target, estado = document.getElementById("form-estado");
-  if (!f.acepta_terminos.checked || !f.acepta_privacidad.checked) {
-    estado.textContent = "Para enviar, marque las dos casillas."; return;
+(function () {
+  const dlg = document.getElementById("demo"), f = document.getElementById("form-contacto");
+  const estado = document.getElementById("form-estado"), sig = document.getElementById("tp-sig"), atras = document.getElementById("tp-atras");
+  const ind = document.getElementById("tp-ind"), barra = document.getElementById("tp-barra").children;
+  let paso = 1, enviando = false;
+  const pasosPanel = f.querySelectorAll(".tp-paso");
+  function mostrar() {
+    pasosPanel.forEach(p => p.classList.toggle("activo", Number(p.dataset.paso) === paso));
+    const fin = paso === 4;
+    ind.textContent = fin ? "LISTO" : "PASO " + paso + " DE 3";
+    [...barra].forEach((b, i) => b.classList.toggle("on", fin || i < paso));
+    atras.hidden = paso === 1 || fin;
+    sig.textContent = fin ? "Cerrar" : (paso === 3 ? "Enviar" : "Siguiente");
+    estado.textContent = "";
   }
-  if (!f.reportValidity()) return;
-  const datos = {
-    nombre: f.nombre.value, empresa: f.empresa.value, correo: f.correo.value,
-    telefono: f.telefono.value, mensaje: f.mensaje.value, sitio_web: f.sitio_web.value,
-    acepta_terminos: f.acepta_terminos.checked, acepta_privacidad: f.acepta_privacidad.checked,
-    pagina: location.pathname
-  };
-  estado.textContent = "Enviando…";
-  try {
-    const r = await fetch("https://gestionbyg-webhook.jburgos.workers.dev/contacto", {
-      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos)
-    });
-    const j = await r.json();
-    if (j.ok) { f.reset(); estado.textContent = "Recibido. Radicado " + (j.radicado || "") + ". Le responderemos pronto."; }
-    else estado.textContent = j.error || "No se pudo enviar. Escríbanos a contacto@gestionbyg.com.";
-  } catch (_) { estado.textContent = "No se pudo enviar. Escríbanos a contacto@gestionbyg.com."; }
-});
+  function validar() {
+    const campos = [...f.querySelector('[data-paso="' + paso + '"]').querySelectorAll("input,textarea")];
+    for (const c of campos) { if (!c.checkValidity()) { c.reportValidity(); return false; } }
+    if (paso === 3 && (!f.acepta_terminos.checked || !f.acepta_privacidad.checked)) {
+      estado.textContent = "Para enviar, marque las dos casillas."; return false;
+    }
+    return true;
+  }
+  async function enviar() {
+    if (enviando) return;
+    enviando = true; sig.disabled = true; estado.textContent = "Enviando…";
+    const datos = {
+      nombre: f.nombre.value, empresa: f.empresa.value, correo: f.correo.value,
+      telefono: f.telefono.value, mensaje: f.mensaje.value, sitio_web: f.sitio_web.value,
+      acepta_terminos: f.acepta_terminos.checked, acepta_privacidad: f.acepta_privacidad.checked,
+      pagina: location.pathname
+    };
+    try {
+      const r = await fetch("https://gestionbyg-webhook.jburgos.workers.dev/contacto", {
+        method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(datos)
+      });
+      const j = await r.json();
+      if (j.ok) {
+        f.reset(); paso = 4; mostrar();
+        document.getElementById("form-ok").innerHTML = "Radicado <strong>" + (j.radicado || "") + "</strong>. Te responderemos pronto.";
+      } else estado.textContent = j.error || "No se pudo enviar. Escríbanos a contacto@gestionbyg.com.";
+    } catch (_) { estado.textContent = "No se pudo enviar. Escríbanos a contacto@gestionbyg.com."; }
+    enviando = false; sig.disabled = false;
+  }
+  sig.addEventListener("click", () => {
+    if (paso === 4) { dlg.close(); return; }
+    if (!validar()) return;
+    if (paso === 3) enviar(); else { paso++; mostrar(); }
+  });
+  atras.addEventListener("click", () => { if (paso > 1) { paso--; mostrar(); } });
+  f.addEventListener("keydown", (e) => { if (e.key === "Enter" && e.target.tagName !== "TEXTAREA") { e.preventDefault(); sig.click(); } });
+  document.querySelectorAll("[data-abrir-demo]").forEach(b => b.addEventListener("click", () => {
+    if (paso === 4) { paso = 1; mostrar(); }
+    if (typeof dlg.showModal === "function") dlg.showModal(); else location.href = "mailto:contacto@gestionbyg.com";
+  }));
+  dlg.querySelector("[data-cerrar]").addEventListener("click", () => dlg.close());
+  dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
+})();
 </script>
 </div></section>
 </main>
