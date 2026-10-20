@@ -34,6 +34,11 @@
       <li>Autorice a Gestión ByG a recibir y responder los mensajes de ese número.</li>
     </ol>
     <p>No le pedimos contraseñas.</p>
+    <div class="tp-campos">
+      <label>Correo de contacto
+        <input type="email" id="cx-correo" autocomplete="email" maxlength="160" placeholder="usted@empresa.com" aria-describedby="cx-correo-ayuda"></label>
+    </div>
+    <p id="cx-correo-ayuda"><small>Aquí le avisaremos cuando su asistente esté activo.</small></p>
     <label class="tp-casilla"><input type="checkbox" id="cx-terminos">
       <span>Acepto los <a href="terminos.html" target="_blank" rel="noopener">Términos del servicio</a>.</span></label>
     <label class="tp-casilla"><input type="checkbox" id="cx-privacidad">
@@ -73,15 +78,16 @@ async function terminar() {
   estado.textContent = "Conectando…";
   try {
     const r = await fetch(API, { method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: codigo, waba_id: sesion.waba_id, phone_number_id: sesion.phone_number_id }) });
+      body: JSON.stringify({ code: codigo, waba_id: sesion.waba_id, phone_number_id: sesion.phone_number_id, correo: cCo.value.trim() }) });
     const j = await r.json();
     estado.textContent = j.ok ? "Listo. Recibimos su conexión; le avisaremos cuando el asistente esté activo." : (j.error || "No se pudo conectar.");
   } catch (_) { estado.textContent = "No se pudo conectar. Escríbanos a soporte@gestionbyg.com."; }
 }
 
-const cT = document.getElementById("cx-terminos"), cP = document.getElementById("cx-privacidad"), bC = document.getElementById("conectar");
-function revisarCasillas() { bC.disabled = !(cT.checked && cP.checked); }
-cT.addEventListener("change", revisarCasillas); cP.addEventListener("change", revisarCasillas);
+const cT = document.getElementById("cx-terminos"), cP = document.getElementById("cx-privacidad"), cCo = document.getElementById("cx-correo"), bC = document.getElementById("conectar");
+const correoOk = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cCo.value.trim());
+function revisarCasillas() { bC.disabled = !(cT.checked && cP.checked && correoOk()); }
+cT.addEventListener("change", revisarCasillas); cP.addEventListener("change", revisarCasillas); cCo.addEventListener("input", revisarCasillas);
 
 document.getElementById("conectar").addEventListener("click", () => {
   if (bC.disabled) return;
